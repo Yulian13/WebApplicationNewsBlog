@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@SharedLocalizer["HomeButtonCaption"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewsList">@SharedLocalizer["NewsListButtonCaption"]</a>
+                        </li>
+                    </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">@SharedLocalizer["LogoutButtonCaption"]</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">@SharedLocalizer["LoginButtonCaption"]</a>
+                    }
+
+                    @{
+                        var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+                        var cultureItems = LocalOptions.Value.SupportedUICultures
+                            .Select(selectItem => new SelectListItem { Value = selectItem.Name, Text = selectItem.NativeName })
+                            .ToList();
+                    }
+                <form asp-controller="Account" asp-action="SetLanguage" class="nav-link text-dark"
+                      asp-route-returnUrl="@Context.Request.Path"
+                      method="post">
+                    @SharedLocalizer["LanguageSelectCaption"] <select name="culture" onchange="this.form.submit();"
+                                                                  asp-for="@requestCulture.RequestCulture.UICulture.Name"
+                                                                  asp-items="cultureItems"></select>
+                </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.production.min.js" crossorigin></script>
+
+    <script src="https://unpkg.com/react-router@6/umd/react-router.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.production.min.js" crossorigin></script>
+
+    <script src="https://unpkg.com/@@babel/standalone/babel.min.js"></script>
+    <script src="~/ReactJsx/index.jsx" type="module"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

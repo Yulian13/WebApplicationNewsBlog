@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+@if (User.IsInRole(Roles.Admin))
+{
+<div class="addNewsButton">
+    <a class="btn btn-outline-dark" asp-area="" asp-controller="Admin" asp-action="NewsForm">@Localizer["AddNewsButtonCaption"]</a>
+</div>
+}
+
+<div id="ReactContent"></div>
